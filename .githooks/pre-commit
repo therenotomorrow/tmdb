@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -e
+
+just lint
+
+git add .
