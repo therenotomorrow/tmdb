@@ -1,0 +1,14 @@
+pkgname: mocks
+template: testify
+filename: "{{ .InterfaceName | lower }}_gen.go"
+packages:
+  net/http:
+    config:
+      dir: pkg/tmdb/mocks
+    interfaces:
+      RoundTripper: { }
+  github.com/therenotomorrow/tmdb/pkg/tmdb:
+    config:
+      dir: internal/app/mocks
+    interfaces:
+      Client: { }

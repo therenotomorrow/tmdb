@@ -21,10 +21,9 @@ const (
 )
 
 type Settings struct {
-	Debug bool   `env:"TMDB_DEBUG" json:"debug"`
 	Token string `env:"TMDB_TOKEN" json:"token"`
-
 	tmdb.Config
+	Debug bool `env:"TMDB_DEBUG" json:"debug"`
 }
 
 func New(filenames ...string) (Settings, error) {

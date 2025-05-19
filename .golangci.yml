@@ -18,6 +18,13 @@ linters:
     wrapcheck:
       ignore-package-globs:
         - github\.com\/samber\/oops
+  exclusions:
+    rules:
+      # simple rules for tests
+      - path: _test\.go
+        linters:
+          - funlen
+          - bodyclose
 
 formatters:
   enable:
