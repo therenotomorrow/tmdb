@@ -5,7 +5,10 @@ tmdb
 <a href="https://goreportcard.com/report/github.com/therenotomorrow/tmdb" target="_blank">
     <img src="https://goreportcard.com/badge/github.com/therenotomorrow/tmdb" alt="Report">
 </a>
-<a href="https://roadmap.sh/projects/task-tracker" target="_blank">
+<a href="https://github.com/therenotomorrow/tmdb/releases" target="_blank">
+    <img src="https://img.shields.io/github/v/release/therenotomorrow/tmdb" alt="Releases">
+</a>
+<a href="https://roadmap.sh/projects/tmdb-cli" target="_blank">
     <img src="https://img.shields.io/badge/project-tmdb_cli-blue" alt="Project">
 </a>
 </p>
