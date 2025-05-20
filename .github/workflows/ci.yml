@@ -8,6 +8,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/just-go
       - name: Lint
         run: just lint
@@ -15,6 +16,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/just-go
       - name: Test
         run: just test cover
