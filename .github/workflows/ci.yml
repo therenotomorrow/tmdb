@@ -5,22 +5,17 @@ on:
   pull_request:
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-
   lint:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: ./.github/actions/just-go
       - name: Lint
         run: just lint
 
   test:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: ./.github/actions/just-go
       - name: Test
         run: just test cover
       - name: Coverage
