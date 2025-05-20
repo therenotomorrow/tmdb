@@ -1,6 +1,8 @@
 package app_test
 
 import (
+	"errors"
+	"io"
 	"strings"
 	"testing"
 
@@ -10,6 +12,8 @@ import (
 	"github.com/therenotomorrow/tmdb/internal/app/mocks"
 	"github.com/therenotomorrow/tmdb/pkg/tmdb"
 )
+
+var errFail = errors.New("fail")
 
 func movies() []tmdb.Movie {
 	return []tmdb.Movie{{
@@ -127,4 +131,106 @@ Current page is 1, prev/next/quit? `
 			assert.Equal(t, want, output.String())
 		})
 	}
+}
+
+func TestTMDBFetchFailure(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		debug bool
+	}
+
+	tests := []struct {
+		name string
+		want string
+		args args
+	}{
+		{name: "public error", args: args{debug: false}, want: "Something went wrong."},
+		{name: "debug error", args: args{debug: true}, want: "Oops: fail"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			output := new(strings.Builder)
+			client := mocks.NewMockClient(t)
+			client.On("GetTopRatedMovies", mock.Anything, 2).Return(nil, errFail)
+
+			obj := New(test.args.debug).WithDependencies(output, client)
+
+			obj.Fetch(t.Context(), 2, "top")
+
+			assert.Contains(t, output.String(), test.want)
+		})
+	}
+}
+
+type reader struct {
+	data []string
+	curr int
+}
+
+func newReader(data ...string) *reader {
+	return &reader{data: data, curr: 0}
+}
+
+func (r *reader) Read(buf []byte) (int, error) {
+	if len(buf) == 1 {
+		return 1, nil
+	}
+
+	if r.curr >= len(r.data) {
+		return 0, io.EOF
+	}
+
+	data := r.data[r.curr] + "\n"
+
+	copy(buf, data)
+
+	r.curr++
+
+	return len(data), nil
+}
+
+func TestTMDBFetchSuccessFlow(t *testing.T) {
+	t.Parallel()
+
+	input := newReader("next", "prev", "quit", "next")
+	output := new(strings.Builder)
+	client := mocks.NewMockClient(t)
+	client.On("GetTopRatedMovies", mock.Anything, 1).Times(2).Return(movies(), nil)
+	client.On("GetTopRatedMovies", mock.Anything, 2).Times(1).Return(movies(), nil)
+
+	obj := New().WithDependencies(input, output, client)
+
+	obj.Fetch(t.Context(), 1, "top")
+}
+
+func TestTMDBFetchSuccessSkip(t *testing.T) {
+	t.Parallel()
+
+	input := newReader("next", "skip", "prev", "quit")
+	output := new(strings.Builder)
+	client := mocks.NewMockClient(t)
+	client.On("GetTopRatedMovies", mock.Anything, 1).Times(1).Return(movies(), nil)
+	client.On("GetTopRatedMovies", mock.Anything, 2).Times(1).Return(movies(), nil)
+
+	obj := New().WithDependencies(input, output, client)
+
+	obj.Fetch(t.Context(), 1, "top")
+}
+
+func TestTMDBFetchFailureFlow(t *testing.T) {
+	t.Parallel()
+
+	input := newReader("next", "skip")
+	output := new(strings.Builder)
+	client := mocks.NewMockClient(t)
+	client.On("GetTopRatedMovies", mock.Anything, 1).Times(1).Return(movies(), nil)
+	client.On("GetTopRatedMovies", mock.Anything, 2).Times(1).Return(nil, errFail)
+
+	obj := New().WithDependencies(input, output, client)
+
+	obj.Fetch(t.Context(), 1, "top")
 }

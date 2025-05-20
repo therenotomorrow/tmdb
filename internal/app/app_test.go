@@ -18,15 +18,19 @@ import (
 	"github.com/therenotomorrow/tmdb/pkg/tmdb"
 )
 
-func New() *app.TMDB {
+func New(debug ...bool) *app.TMDB {
+	if len(debug) == 0 {
+		debug = append(debug, false)
+	}
+
 	return fp.Must(app.New(config.Settings{
-		Debug: false,
+		Debug: debug[0],
 		Token: "secret",
 		Config: tmdb.Config{
 			Host:    "https://tmdb.host",
 			Token:   "secret",
 			Timeout: time.Minute,
-			Debug:   false,
+			Debug:   debug[0],
 		},
 	}))
 }

@@ -60,7 +60,6 @@ func New(config Config) (*TMDB, error) {
 		SetBaseURL(config.Host).
 		SetDebug(config.Debug).
 		SetError(new(errorResponse)).
-		SetHeader("accept", "application/json").
 		SetQueryParams(map[string]string{"language": "en"})
 
 	return &TMDB{config: config, engine: engine, oops: errBuilder}, nil
