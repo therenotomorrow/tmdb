@@ -5,7 +5,7 @@
     <img src="https://goreportcard.com/badge/github.com/therenotomorrow/tmdb" alt="Go Report Card">
 </a>
 <a href="https://codecov.io/gh/therenotomorrow/tmdb" target="_blank">
-    <img src="https://codecov.io/gh/therenotomorrow/tmdb/graph/badge.svg?token=CGYK1Y72S2" alt="Codecov">
+    <img src="https://codecov.io/gh/therenotomorrow/tmdb/graph/badge.svg?token=QF1GAMYEM1" alt="Codecov">
 </a>
 <a href="https://github.com/therenotomorrow/tmdb/releases" target="_blank">
     <img src="https://img.shields.io/github/v/release/therenotomorrow/tmdb" alt="GitHub Releases">
